@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 
 # Load OpenRouter API key from .env
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
