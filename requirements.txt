@@ -1,3 +1,5 @@
-flask
-openai
+Flask
+python-dotenv
+fpdf
+requests
 
