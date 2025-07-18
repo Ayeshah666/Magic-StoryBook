@@ -19,9 +19,9 @@ COPY . /app/
 # Expose the port
 EXPOSE 8080
 
-# Set environment variable for OpenAI key (if using Docker secrets or envs)
-# You can also override this from the CLI or Railway
-ENV OPENAI_API_KEY=your-openrouter-key-here
+# Read the OpenRouter API key from environment (don't hardcode!)
+# DO NOT hardcode your real key — remove this line:
+# ENV OPENROUTER_API_KEY=sk-or-...
 
 # Run the app
 CMD ["python", "app.py"]
