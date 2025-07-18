@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Magic Storybook Creator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #d3b4f5, #f5d9f7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .storybook-wrapper {
+      background: linear-gradient(to right, #dd7ec5, #f5d9f7);
+      padding: 40px 30px;
+      border-radius: 25px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(160, 100, 200, 0.3);
+    }
+    h1 {
+      text-align: center;
+      color: #7e3ff2;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    .floating {
+            animation: float 4s ease-in-out infinite;
+    } 
+    .center-svg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+    label {
+      font-weight: 600;
+      margin-top: 15px;
+      display: block;
+      color: #5a2d82;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e6c8f9;
+      border-radius: 12px;
+      margin-top: 8px;
+      font-size: 15px;
+      background-color: #faf5ff;
+    }
+    button {
+      background: #9d4edd;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #7b2cbf;
+    }
+    #storyViewer {
+      margin-top: 30px;
+      background: #f4eaff;
+      border-radius: 15px;
+      padding: 20px;
+      min-height: 150px;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-size: 16px;
+      border: 1px dashed #b589e4;
+    }
+  </style>
+</head>
+<body>
+  <div class="storybook-wrapper">
+    <h1>📖 Magic Storybook Creator</h1>
+<div class="mt-6 floating center-svg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#7e22ce" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                </svg>
+            </div>
+    <label for="childName">Name</label>
+    <input type="text" id="childName" placeholder="e.g., Name">
+
+    <label for="favoriteAnimal">Favorite Animal</label>
+    <input type="text" id="favoriteAnimal" placeholder="e.g., Unicorn">
+
+    <label for="favoriteColor">Favorite Color</label>
+    <input type="text" id="favoriteColor" placeholder="e.g., Purple">
+
+    <label for="storyTheme">Story Theme</label>
+    <select id="storyTheme">
+      <option value="Adventure">Adventure</option>
+      <option value="Bedtime">Bedtime</option>
+      <option value="Space">Space</option>
+      <option value="Jungle">Jungle</option>
+    </select>
+
+    <label for="extraDetails">Extra Details</label>
+    <textarea id="extraDetails" rows="3" placeholder="e.g., Include a magic rainbow, castle, etc."></textarea>
+
+    <button onclick="generateStory()">✨ Generate Story</button>
+
+    <div id="storyViewer"></div>
+
+    <button onclick="downloadPDF()">📄 Download as PDF</button>
+  </div>
+
+  <script>
+    let currentStory = "";
+
+    function generateStory() {
+      const data = {
+        childName: document.getElementById("childName").value,
+        favoriteAnimal: document.getElementById("favoriteAnimal").value,
+        favoriteColor: document.getElementById("favoriteColor").value,
+        storyTheme: document.getElementById("storyTheme").value,
+        extraDetails: document.getElementById("extraDetails").value
+      };
+
+      document.getElementById("storyViewer").innerText = "Generating story... Please wait ✨";
+
+      fetch("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(res => {
+        currentStory = res.story;
+        document.getElementById("storyViewer").innerText = res.story;
+      })
+      .catch(() => {
+        document.getElementById("storyViewer").innerText = "Oops! Something went wrong.";
+      });
+    }
+
+    function downloadPDF() {
+      const name = document.getElementById("childName").value || "Storybook";
+      fetch("/download_pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ story: currentStory, childName: name })
+      })
+      .then(response => response.blob())
+      .then(blob => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `${name}_storybook.pdf`;
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
