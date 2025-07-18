@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: magic-storybook
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python app.py"
-    envVars:
-      - key: OPENROUTER_API_KEY
-        sync: false
